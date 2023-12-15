@@ -1,6 +1,6 @@
 {
   "name": "@basementuniverse/utils",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A collection of useful functions",
   "main": "utils.js",
   "types": "utils.d.ts",
