@@ -1,24 +1,6 @@
 /// <reference types="typescript" />
 
 /**
- * An interpolation function
- * @callback interpolationCallback
- * @param {number} a The minimum number
- * @param {number} b The maximum number
- * @param {number} i The interpolation value, should be in the interval [0, 1]
- * @return {number} The interpolated value in the interval [a, b]
- */
-type interpolationCallback = (a: number, b: number, i: number) => number;
-
-/**
- * A function for generating array values
- * @callback timesCallback
- * @param {number} i The array index
- * @return {*} The array value
- */
-type timesCallback = (i: number) => any;
-
-/**
  * Check if two numbers are approximately equal
  * @param {number} a Number a
  * @param {number} b Number b
@@ -42,6 +24,24 @@ declare function clamp(a: number, min?: number, max?: number): number;
  * @return {number} The fractional part of the number
  */
 declare function frac(a: number): number;
+
+/**
+ * Round n to d decimal places
+ * @param {number} n The number to round
+ * @param {number} [d=0] The number of decimal places to round to
+ * @return {number} A rounded number
+ */
+declare function round(n: number, d?: number): number;
+
+/**
+ * An interpolation function
+ * @callback InterpolationFunction
+ * @param {number} a The minimum number
+ * @param {number} b The maximum number
+ * @param {number} i The interpolation value, should be in the interval [0, 1]
+ * @return {number} The interpolated value in the interval [a, b]
+ */
+type InterpolationFunction = (a: number, b: number, i: number) => number;
 
 /**
  * Do a linear interpolation between a and b
@@ -151,10 +151,10 @@ declare function weightedRandom(w: Array<number>): number;
  * Return an interpolated value from an array
  * @param {Array<number>} a An array of values interpolate
  * @param {number} i A number in the interval [0, 1]
- * @param {interpolationCallback} [f=Math.lerp] The interpolation function to use
+ * @param {InterpolationFunction} [f=Math.lerp] The interpolation function to use
  * @return {number} An interpolated value in the interval [min(a), max(a)]
  */
-declare function lerpArray(a: Array<number>, i: number, f?: interpolationCallback): number;
+declare function lerpArray(a: Array<number>, i: number, f?: InterpolationFunction): number;
 
 /**
  * Get the dot product of two vectors
@@ -177,7 +177,7 @@ declare function factorial(a: number): number;
  * @param {number} r
  * @return {number} nPr
  */
-declare function permutation(n: number, r: number): number;
+declare function npr(n: number, r: number): number;
 
 /**
  * Get the number of combinations of r elements from a set of n elements
@@ -185,15 +185,75 @@ declare function permutation(n: number, r: number): number;
  * @param {number} r
  * @return {number} nCr
  */
-declare function combination(n: number, r: number): number;
+declare function ncr(n: number, r: number): number;
+
+/**
+ * Generate all combinations of r elements from an array
+ *
+ * @example
+ * ```js
+ * combinations([1, 2, 3], 2);
+ * ```
+ *
+ * Output:
+ * ```json
+ * [
+ *   [1, 2],
+ *   [1, 3],
+ *   [2, 3]
+ * ]
+ * ```
+ * @param {T[]} a
+ * @param {number} r The number of elements to choose in each combination
+ * @return {T[][]} An array of combination arrays
+ */
+declare function combinations<T>(a: T[], r: number): T[][];
+
+/**
+ * A cartesian product of arrays
+ * @template T
+ */
+type MapCartesian<T extends any[][]> = {
+  [P in keyof T]: T[P] extends Array<infer U> ? U : never;
+};
+
+/**
+ * Get a cartesian product of arrays
+ *
+ * @example
+ * ```ts
+ * cartesian([1, 2, 3], ['a', 'b']);
+ * ```
+ *
+ * Output:
+ * ```json
+ * [
+ *   [1, "a"],
+ *   [1, "b"],
+ *   [2, "a"],
+ *   [2, "b"],
+ *   [3, "a"],
+ *   [3, "b"]
+ * ]
+ * ```
+ */
+declare function cartesian<T extends any[][]>(...arr: T): MapCartesian<T>[];
+
+/**
+ * A function for generating array values
+ * @callback TimesFunction
+ * @param {number} i The array index
+ * @return {*} The array value
+ */
+type TimesFunction = (i: number) => any;
 
 /**
  * Return a new array with length n by calling function f(i) on each element
- * @param {timesCallback} f
+ * @param {TimesFunction} f
  * @param {number} n The size of the array
  * @return {Array<*>}
  */
-declare function times(f: timesCallback, n: number): Array<any>;
+declare function times(f: TimesFunction, n: number): Array<any>;
 
 /**
  * Return an array containing numbers 0->(n - 1)
@@ -219,6 +279,13 @@ declare function zip(a: Array<any>, b: Array<any>): Array<Array<any>>;
 declare function at(a: Array<any>, i: number): any;
 
 /**
+ * Return the last element of an array without removing it
+ * @param {T[]} a
+ * @return {T} The last element from the array
+ */
+declare function at<T = any>(a: T[]): T | undefined;
+
+/**
  * Chop an array into chunks of size n
  * @param {Array<*>} a
  * @param {number} n The chunk size
@@ -233,10 +300,67 @@ declare function chunk(a: Array<any>, n: number): Array<Array<any>>;
  */
 declare function shuffle(a: Array<any>): Array<any>;
 
+/**
+ * Flatten an object
+ * @param {object} o
+ * @param {string} concatenator The string to use for concatenating keys
+ * @return {object} A flattened object
+ */
+declare function flat(o: object, concatenator?: string): object;
+
+/**
+ * Unflatten an object
+ * @param {object} o
+ * @param {string} concatenator The string to check for in concatenated keys
+ * @return {object} An un-flattened object
+ */
+declare function unflat(o: object, concatenator?: string): object;
+
+/**
+ * A split predicate
+ * @callback SplitPredicate
+ * @param {any} value The current value
+ * @return {boolean} True if the array should split at this index
+ */
+type SplitPredicate = (a: number, b: number, i: number) => number;
+
+/**
+ * Split an array into sub-arrays based on a predicate
+ * @param {T[]} a
+ * @param {SplitPredicate} predicate
+ * @return {T[][]} An array of arrays
+ */
+declare function split<T>(a: T[], predicate: SplitPredicate): T[][];
+
+/**
+ * Pluck keys from an object
+ * @param {object} o
+ * @param  {...string} keys The keys to pluck from the object
+ * @return {object} An object containing the plucked keys
+ */
+declare function pluck<T extends object, K extends keyof T>(
+  o: T,
+  ...keys: K[]
+): Pick<T, K>;
+
+/**
+ * Exclude keys from an object
+ * @param {object} o
+ * @param  {...string} keys The keys to exclude from the object
+ * @return {object} An object containing all keys except excluded keys
+ */
+declare function exclude<T extends object, K extends [...(keyof T)[]]>(
+  o: T,
+  ...keys: K
+): {
+  [K2 in Exclude<keyof T, K[number]>]: T[K2];
+};
+
 export {
   floatEquals,
   clamp,
   frac,
+  round,
   lerp,
   unlerp,
   blerp,
@@ -252,12 +376,19 @@ export {
   lerpArray,
   dot,
   factorial,
-  permutation,
-  combination,
+  npr,
+  ncr,
+  combinations,
+  cartesian,
   times,
   range,
   zip,
   at,
   chunk,
   shuffle,
+  flat,
+  unflat,
+  split,
+  pluck,
+  exclude,
 };

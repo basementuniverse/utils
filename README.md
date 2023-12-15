@@ -36,6 +36,9 @@ import * as utils from '@basementuniverse/utils';
 <dt><a href="#frac">frac(a)</a> ⇒ <code>number</code></dt>
 <dd><p>Get the fractional part of a number</p>
 </dd>
+<dt><a href="#round">round(n, [d])</a> ⇒ <code>number</code></dt>
+<dd><p>Round n to d decimal places</p>
+</dd>
 <dt><a href="#lerp">lerp(a, b, i)</a> ⇒ <code>number</code></dt>
 <dd><p>Do a linear interpolation between a and b</p>
 </dd>
@@ -81,11 +84,17 @@ import * as utils from '@basementuniverse/utils';
 <dt><a href="#factorial">factorial(a)</a> ⇒ <code>number</code></dt>
 <dd><p>Get the factorial of a number</p>
 </dd>
-<dt><a href="#permutation">permutation(n, r)</a> ⇒ <code>number</code></dt>
+<dt><a href="#npr">npr(n, r)</a> ⇒ <code>number</code></dt>
 <dd><p>Get the number of permutations of r elements from a set of n elements</p>
 </dd>
-<dt><a href="#combination">combination(n, r)</a> ⇒ <code>number</code></dt>
+<dt><a href="#ncr">ncr(n, r)</a> ⇒ <code>number</code></dt>
 <dd><p>Get the number of combinations of r elements from a set of n elements</p>
+</dd>
+<dt><a href="#combinations">combinations(a, r)</a> ⇒ <code>Array.&lt;Array.&lt;*&gt;&gt;</code></dt>
+<dd><p>Generate all combinations of r elements from an array</p>
+</dd>
+<dt><a href="#cartesian">cartesian()</a></dt>
+<dd><p>Get a cartesian product of arrays</p>
 </dd>
 <dt><a href="#times">times(f, n)</a> ⇒ <code>Array.&lt;*&gt;</code></dt>
 <dd><p>Return a new array with length n by calling function f(i) on each element</p>
@@ -99,22 +108,43 @@ import * as utils from '@basementuniverse/utils';
 <dt><a href="#at">at(a, i)</a> ⇒ <code>*</code></dt>
 <dd><p>Return array[i] with positive and negative wrapping</p>
 </dd>
+<dt><a href="#peek">peek(a)</a> ⇒ <code>*</code></dt>
+<dd><p>Return the last element of an array without removing it</p>
+</dd>
 <dt><a href="#chunk">chunk(a, n)</a> ⇒ <code>Array.&lt;Array.&lt;*&gt;&gt;</code></dt>
 <dd><p>Chop an array into chunks of size n</p>
 </dd>
 <dt><a href="#shuffle">shuffle(a)</a> ⇒ <code>Array.&lt;*&gt;</code></dt>
 <dd><p>Randomly shuffle a shallow copy of an array</p>
 </dd>
+<dt><a href="#flat">flat(o, concatenator)</a> ⇒ <code>object</code></dt>
+<dd><p>Flatten an object</p>
+</dd>
+<dt><a href="#unflat">unflat(o, concatenator)</a> ⇒ <code>object</code></dt>
+<dd><p>Unflatten an object</p>
+</dd>
+<dt><a href="#split">split(array, predicate)</a> ⇒ <code>Array.&lt;Array.&lt;*&gt;&gt;</code></dt>
+<dd><p>Split an array into sub-arrays based on a predicate</p>
+</dd>
+<dt><a href="#pluck">pluck(o, ...keys)</a> ⇒ <code>object</code></dt>
+<dd><p>Pluck keys from an object</p>
+</dd>
+<dt><a href="#exclude">exclude(o, ...keys)</a> ⇒ <code>object</code></dt>
+<dd><p>Exclude keys from an object</p>
+</dd>
 </dl>
 
 ## Typedefs
 
 <dl>
-<dt><a href="#interpolationCallback">interpolationCallback</a> ⇒ <code>number</code></dt>
+<dt><a href="#InterpolationFunction">InterpolationFunction</a> ⇒ <code>number</code></dt>
 <dd><p>An interpolation function</p>
 </dd>
-<dt><a href="#timesCallback">timesCallback</a> ⇒ <code>*</code></dt>
+<dt><a href="#TimesFunction">TimesFunction</a> ⇒ <code>*</code></dt>
 <dd><p>A function for generating array values</p>
+</dd>
+<dt><a href="#SplitPredicate">SplitPredicate</a> ⇒ <code>boolean</code></dt>
+<dd><p>A split predicate</p>
 </dd>
 </dl>
 
@@ -157,6 +187,19 @@ Get the fractional part of a number
 | Param | Type | Description |
 | --- | --- | --- |
 | a | <code>number</code> | The number from which to get the fractional part |
+
+<a name="round"></a>
+
+## round(n, [d]) ⇒ <code>number</code>
+Round n to d decimal places
+
+**Kind**: global function  
+**Returns**: <code>number</code> - A rounded number  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| n | <code>number</code> |  | The number to round |
+| [d] | <code>number</code> | <code>0</code> | The number of decimal places to round to |
 
 <a name="lerp"></a>
 
@@ -333,7 +376,7 @@ Return an interpolated value from an array
 | --- | --- | --- | --- |
 | a | <code>Array.&lt;number&gt;</code> |  | An array of values interpolate |
 | i | <code>number</code> |  | A number in the interval [0, 1] |
-| [f] | [<code>interpolationCallback</code>](#interpolationCallback) | <code>Math.lerp</code> | The interpolation function to use |
+| [f] | [<code>InterpolationFunction</code>](#InterpolationFunction) | <code>Math.lerp</code> | The interpolation function to use |
 
 <a name="dot"></a>
 
@@ -360,9 +403,9 @@ Get the factorial of a number
 | --- | --- |
 | a | <code>number</code> | 
 
-<a name="permutation"></a>
+<a name="npr"></a>
 
-## permutation(n, r) ⇒ <code>number</code>
+## npr(n, r) ⇒ <code>number</code>
 Get the number of permutations of r elements from a set of n elements
 
 **Kind**: global function  
@@ -373,9 +416,9 @@ Get the number of permutations of r elements from a set of n elements
 | n | <code>number</code> | 
 | r | <code>number</code> | 
 
-<a name="combination"></a>
+<a name="ncr"></a>
 
-## combination(n, r) ⇒ <code>number</code>
+## ncr(n, r) ⇒ <code>number</code>
 Get the number of combinations of r elements from a set of n elements
 
 **Kind**: global function  
@@ -386,6 +429,54 @@ Get the number of combinations of r elements from a set of n elements
 | n | <code>number</code> | 
 | r | <code>number</code> | 
 
+<a name="combinations"></a>
+
+## combinations(a, r) ⇒ <code>Array.&lt;Array.&lt;\*&gt;&gt;</code>
+Generate all combinations of r elements from an array
+
+**Kind**: global function  
+**Returns**: <code>Array.&lt;Array.&lt;\*&gt;&gt;</code> - An array of combination arrays  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| a | <code>Array.&lt;\*&gt;</code> |  |
+| r | <code>number</code> | The number of elements to choose in each combination |
+
+**Example**  
+```js
+combinations([1, 2, 3], 2);
+```
+
+Output:
+```json
+[
+  [1, 2],
+  [1, 3],
+  [2, 3]
+]
+```
+<a name="cartesian"></a>
+
+## cartesian()
+Get a cartesian product of arrays
+
+**Kind**: global function  
+**Example**  
+```js
+cartesian([1, 2, 3], ['a', 'b']);
+```
+
+Output:
+```json
+[
+  [1, "a"],
+  [1, "b"],
+  [2, "a"],
+  [2, "b"],
+  [3, "a"],
+  [3, "b"]
+]
+```
 <a name="times"></a>
 
 ## times(f, n) ⇒ <code>Array.&lt;\*&gt;</code>
@@ -395,7 +486,7 @@ Return a new array with length n by calling function f(i) on each element
 
 | Param | Type | Description |
 | --- | --- | --- |
-| f | [<code>timesCallback</code>](#timesCallback) |  |
+| f | [<code>TimesFunction</code>](#TimesFunction) |  |
 | n | <code>number</code> | The size of the array |
 
 <a name="range"></a>
@@ -435,6 +526,18 @@ Return array[i] with positive and negative wrapping
 | a | <code>Array.&lt;\*&gt;</code> |  |
 | i | <code>number</code> | The positively/negatively wrapped array index |
 
+<a name="peek"></a>
+
+## peek(a) ⇒ <code>\*</code>
+Return the last element of an array without removing it
+
+**Kind**: global function  
+**Returns**: <code>\*</code> - The last element from the array  
+
+| Param | Type |
+| --- | --- |
+| a | <code>Array.&lt;\*&gt;</code> | 
+
 <a name="chunk"></a>
 
 ## chunk(a, n) ⇒ <code>Array.&lt;Array.&lt;\*&gt;&gt;</code>
@@ -460,9 +563,74 @@ Randomly shuffle a shallow copy of an array
 | --- | --- |
 | a | <code>Array.&lt;\*&gt;</code> | 
 
-<a name="interpolationCallback"></a>
+<a name="flat"></a>
 
-## interpolationCallback ⇒ <code>number</code>
+## flat(o, concatenator) ⇒ <code>object</code>
+Flatten an object
+
+**Kind**: global function  
+**Returns**: <code>object</code> - A flattened object  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| o | <code>object</code> |  |  |
+| concatenator | <code>string</code> | <code>&quot;.&quot;</code> | The string to use for concatenating keys |
+
+<a name="unflat"></a>
+
+## unflat(o, concatenator) ⇒ <code>object</code>
+Unflatten an object
+
+**Kind**: global function  
+**Returns**: <code>object</code> - An un-flattened object  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| o | <code>object</code> |  |  |
+| concatenator | <code>string</code> | <code>&quot;.&quot;</code> | The string to check for in concatenated keys |
+
+<a name="split"></a>
+
+## split(array, predicate) ⇒ <code>Array.&lt;Array.&lt;\*&gt;&gt;</code>
+Split an array into sub-arrays based on a predicate
+
+**Kind**: global function  
+**Returns**: <code>Array.&lt;Array.&lt;\*&gt;&gt;</code> - An array of arrays  
+
+| Param | Type |
+| --- | --- |
+| array | <code>Array.&lt;\*&gt;</code> | 
+| predicate | [<code>SplitPredicate</code>](#SplitPredicate) | 
+
+<a name="pluck"></a>
+
+## pluck(o, ...keys) ⇒ <code>object</code>
+Pluck keys from an object
+
+**Kind**: global function  
+**Returns**: <code>object</code> - An object containing the plucked keys  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| o | <code>object</code> |  |
+| ...keys | <code>string</code> | The keys to pluck from the object |
+
+<a name="exclude"></a>
+
+## exclude(o, ...keys) ⇒ <code>object</code>
+Exclude keys from an object
+
+**Kind**: global function  
+**Returns**: <code>object</code> - An object containing all keys except excluded keys  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| o | <code>object</code> |  |
+| ...keys | <code>string</code> | The keys to exclude from the object |
+
+<a name="InterpolationFunction"></a>
+
+## InterpolationFunction ⇒ <code>number</code>
 An interpolation function
 
 **Kind**: global typedef  
@@ -474,9 +642,9 @@ An interpolation function
 | b | <code>number</code> | The maximum number |
 | i | <code>number</code> | The interpolation value, should be in the interval [0, 1] |
 
-<a name="timesCallback"></a>
+<a name="TimesFunction"></a>
 
-## timesCallback ⇒ <code>\*</code>
+## TimesFunction ⇒ <code>\*</code>
 A function for generating array values
 
 **Kind**: global typedef  
@@ -485,4 +653,16 @@ A function for generating array values
 | Param | Type | Description |
 | --- | --- | --- |
 | i | <code>number</code> | The array index |
+
+<a name="SplitPredicate"></a>
+
+## SplitPredicate ⇒ <code>boolean</code>
+A split predicate
+
+**Kind**: global typedef  
+**Returns**: <code>boolean</code> - True if the array should split at this index  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| value | <code>any</code> | The current value |
 

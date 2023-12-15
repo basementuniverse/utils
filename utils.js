@@ -29,6 +29,17 @@ const clamp = (a, min = 0, max = 1) => a < min ? min : (a > max ? max : a);
 const frac = a => a >= 0 ? a - Math.floor(a) : a - Math.ceil(a);
 
 /**
+ * Round n to d decimal places
+ * @param {number} n The number to round
+ * @param {number} [d=0] The number of decimal places to round to
+ * @return {number} A rounded number
+ */
+const round = (n, d = 0) => {
+  const p = Math.pow(10, d);
+  return Math.round(n * p + Number.EPSILON) / p;
+}
+
+/**
  * Do a linear interpolation between a and b
  * @param {number} a The minimum number
  * @param {number} b The maximum number
@@ -147,7 +158,7 @@ const weightedRandom = w => {
 
 /**
  * An interpolation function
- * @callback interpolationCallback
+ * @callback InterpolationFunction
  * @param {number} a The minimum number
  * @param {number} b The maximum number
  * @param {number} i The interpolation value, should be in the interval [0, 1]
@@ -158,7 +169,7 @@ const weightedRandom = w => {
  * Return an interpolated value from an array
  * @param {Array<number>} a An array of values interpolate
  * @param {number} i A number in the interval [0, 1]
- * @param {interpolationCallback} [f=Math.lerp] The interpolation function to use
+ * @param {InterpolationFunction} [f=Math.lerp] The interpolation function to use
  * @return {number} An interpolated value in the interval [min(a), max(a)]
  */
 const lerpArray = (a, i, f = lerp) => {
@@ -194,7 +205,7 @@ const factorial = a => {
  * @param {number} r
  * @return {number} nPr
  */
-const permutation = (n, r) => factorial(n) / factorial(n - r);
+const npr = (n, r) => factorial(n) / factorial(n - r);
 
 /**
  * Get the number of combinations of r elements from a set of n elements
@@ -202,18 +213,78 @@ const permutation = (n, r) => factorial(n) / factorial(n - r);
  * @param {number} r
  * @return {number} nCr
  */
-const combination = (n, r) => factorial(n) / (factorial(r) * factorial(n - r));
+const ncr = (n, r) => factorial(n) / (factorial(r) * factorial(n - r));
+
+/**
+ * Generate all combinations of r elements from an array
+ *
+ * @example
+ * ```js
+ * combinations([1, 2, 3], 2);
+ * ```
+ *
+ * Output:
+ * ```json
+ * [
+ *   [1, 2],
+ *   [1, 3],
+ *   [2, 3]
+ * ]
+ * ```
+ * @param {Array<*>} a
+ * @param {number} r The number of elements to choose in each combination
+ * @return {Array<Array<*>>} An array of combination arrays
+ */
+const combinations = (a, r) => {
+  if (r === 1) {
+    return a.map(item => [item]);
+  }
+
+  return a.reduce(
+    (acc, item, i) => [
+      ...acc,
+      ...combinations(a.slice(i + 1), r - 1).map(c => [item, ...c]),
+    ],
+    []
+  );
+};
+
+/**
+ * Get a cartesian product of arrays
+ *
+ * @example
+ * ```js
+ * cartesian([1, 2, 3], ['a', 'b']);
+ * ```
+ *
+ * Output:
+ * ```json
+ * [
+ *   [1, "a"],
+ *   [1, "b"],
+ *   [2, "a"],
+ *   [2, "b"],
+ *   [3, "a"],
+ *   [3, "b"]
+ * ]
+ * ```
+ */
+const cartesian = (...arr) =>
+  arr.reduce(
+    (a, b) => a.flatMap(c => b.map(d => [...c, d])),
+    [[]]
+  );
 
 /**
  * A function for generating array values
- * @callback timesCallback
+ * @callback TimesFunction
  * @param {number} i The array index
  * @return {*} The array value
  */
 
 /**
  * Return a new array with length n by calling function f(i) on each element
- * @param {timesCallback} f
+ * @param {TimesFunction} f
  * @param {number} n The size of the array
  * @return {Array<*>}
  */
@@ -243,6 +314,19 @@ const zip = (a, b) => a.map((k, i) => [k, b[i]]);
 const at = (a, i) => a[i < 0 ? a.length - (Math.abs(i + 1) % a.length) - 1 : i % a.length];
 
 /**
+ * Return the last element of an array without removing it
+ * @param {Array<*>} a
+ * @return {*} The last element from the array
+ */
+const peek = (a) => {
+  if (!a.length) {
+    return undefined;
+  }
+
+  return a[a.length - 1];
+};
+
+/**
  * Chop an array into chunks of size n
  * @param {Array<*>} a
  * @param {number} n The chunk size
@@ -257,11 +341,132 @@ const chunk = (a, n) => times(i => a.slice(i * n, i * n + n), Math.ceil(a.length
  */
 const shuffle = a => a.slice().sort(() => Math.random() - 0.5);
 
+/**
+ * Flatten an object
+ * @param {object} o
+ * @param {string} concatenator The string to use for concatenating keys
+ * @return {object} A flattened object
+ */
+const flat = (o, concatenator = '.') => {
+  return Object.keys(o).reduce((acc, key) => {
+    if (o[key] instanceof Date) {
+      return {
+        ...acc,
+        [key]: o[key].toISOString(),
+      };
+    }
+
+    if (typeof o[key] !== 'object' || !o[key]) {
+      return {
+        ...acc,
+        [key]: o[key],
+      };
+    }
+    const flattened = flat(o[key], concatenator);
+
+    return {
+      ...acc,
+      ...Object.keys(flattened).reduce(
+        (childAcc, childKey) => ({
+          ...childAcc,
+          [`${key}${concatenator}${childKey}`]: flattened[childKey],
+        }),
+        {}
+      ),
+    };
+  }, {});
+};
+
+/**
+ * Unflatten an object
+ * @param {object} o
+ * @param {string} concatenator The string to check for in concatenated keys
+ * @return {object} An un-flattened object
+ */
+const unflat = (o, concatenator = '.') => {
+  let result = {}, temp, substrings, property, i;
+
+  for (property in o) {
+    substrings = property.split(concatenator);
+    temp = result;
+    for (i = 0; i < substrings.length - 1; i++) {
+      if (!(substrings[i] in temp)) {
+        if (isFinite(substrings[i + 1])) {
+          temp[substrings[i]] = [];
+        } else {
+          temp[substrings[i]] = {};
+        }
+      }
+      temp = temp[substrings[i]];
+    }
+    temp[substrings[substrings.length - 1]] = o[property];
+  }
+
+  return result;
+};
+
+/**
+ * A split predicate
+ * @callback SplitPredicate
+ * @param {any} value The current value
+ * @return {boolean} True if the array should split at this index
+ */
+
+/**
+ * Split an array into sub-arrays based on a predicate
+ * @param {Array<*>} array
+ * @param {SplitPredicate} predicate
+ * @return {Array<Array<*>>} An array of arrays
+ */
+const split = (array, predicate) => {
+  const result = [];
+  let current = [];
+  for (const value of array) {
+    if (predicate(value)) {
+      if (current.length) {
+        result.push(current);
+      }
+      current = [value];
+    } else {
+      current.push(value);
+    }
+  }
+  result.push(current);
+
+  return result;
+};
+
+/**
+ * Pluck keys from an object
+ * @param {object} o
+ * @param  {...string} keys The keys to pluck from the object
+ * @return {object} An object containing the plucked keys
+ */
+const pluck = (o, ...keys) => {
+  return keys.reduce(
+    (result, key) => Object.assign(result, { [key]: o[key] }),
+    {}
+  );
+};
+
+/**
+ * Exclude keys from an object
+ * @param {object} o
+ * @param  {...string} keys The keys to exclude from the object
+ * @return {object} An object containing all keys except excluded keys
+ */
+const exclude = (o, ...keys) => {
+  return Object.fromEntries(
+    Object.entries(o).filter(([key]) => !keys.includes(key))
+  );
+};
+
 if (typeof module !== 'undefined') {
   module.exports = {
     floatEquals,
     clamp,
     frac,
+    round,
     lerp,
     unlerp,
     blerp,
@@ -277,13 +482,21 @@ if (typeof module !== 'undefined') {
     lerpArray,
     dot,
     factorial,
-    permutation,
-    combination,
+    npr,
+    ncr,
+    combinations,
+    cartesian,
     times,
     range,
     zip,
     at,
+    peek,
     chunk,
     shuffle,
+    flat,
+    unflat,
+    split,
+    pluck,
+    exclude,
   };
 }

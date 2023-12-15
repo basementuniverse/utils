@@ -2,60 +2,6 @@ const utils = require('../utils.js');
 
 QUnit.module('Utils tests');
 
-QUnit.test('Generate an array', assert => {
-  assert.deepEqual(utils.times(i => i, 3), [0, 1, 2]);
-});
-
-QUnit.test('Create an array of integers', assert => {
-  assert.deepEqual(utils.range(3), [0, 1, 2]);
-});
-
-QUnit.test('Zip arrays together', assert => {
-  assert.deepEqual(utils.zip(['a', 'b', 'c'], [1, 2, 3]), [
-    ['a', 1],
-    ['b', 2],
-    ['c', 3]
-  ]);
-});
-
-QUnit.test('Array value at wrapped index', assert => {
-  const a = [1, 2, 3];
-  assert.equal(utils.at(a, 0), 1);
-  assert.equal(utils.at(a, 1), 2);
-  assert.equal(utils.at(a, 2), 3);
-  assert.equal(utils.at(a, -1), 3);
-  assert.equal(utils.at(a, -2), 2);
-  assert.equal(utils.at(a, -3), 1);
-  assert.equal(utils.at(a, -4), 3);
-  assert.equal(utils.at(a, 3), 1);
-  assert.equal(utils.at(a, 4), 2);
-});
-
-QUnit.test('Chop an array into chunks', assert => {
-  const a = utils.range(12);
-  assert.deepEqual(utils.chunk(a, 3), [
-    [0, 1, 2],
-    [3, 4, 5],
-    [6, 7, 8],
-    [9, 10, 11]
-  ]);
-  assert.deepEqual(utils.chunk(a, 4), [
-    [0, 1, 2, 3],
-    [4, 5, 6, 7],
-    [8, 9, 10, 11]
-  ]);
-  assert.deepEqual(utils.chunk(a, 5), [
-    [0, 1, 2, 3, 4],
-    [5, 6, 7, 8, 9],
-    [10, 11]
-  ]);
-});
-
-QUnit.test('Shuffle an array', assert => {
-  const a = utils.shuffle(utils.range(100));
-  assert.notEqual(a[0], 0);
-});
-
 QUnit.test('Approximate value equality', assert => {
   assert.equal(utils.floatEquals(1 / 3, 0.3333333333333333), true);
 });
@@ -72,6 +18,12 @@ QUnit.test('Clamp values', assert => {
 QUnit.test('Fractional part of a number', assert => {
   assert.equal(utils.frac(1.5), 0.5);
   assert.equal(utils.frac(2), 0);
+});
+
+QUnit.test('Round a number to a given precision', assert => {
+  assert.equal(utils.round(1.23456789), 1);
+  assert.equal(utils.round(1.23456789, 2), 1.23);
+  assert.equal(utils.round(1.23456789, 3), 1.235);
 });
 
 QUnit.test('Linear interpolation', assert => {
@@ -163,14 +115,146 @@ QUnit.test('Factorial of a number', assert => {
   }
 });
 
-QUnit.test('Combinations', assert => {
-  assert.equal(utils.combination(3, 1), 3);
-  assert.equal(utils.combination(3, 3), 1);
-  assert.equal(utils.combination(10, 3), 120);
+QUnit.test('Count permutations', assert => {
+  assert.equal(utils.npr(3, 1), 3);
+  assert.equal(utils.npr(3, 3), 6);
+  assert.equal(utils.npr(10, 3), 720);
 });
 
-QUnit.test('Permutations', assert => {
-  assert.equal(utils.permutation(3, 1), 3);
-  assert.equal(utils.permutation(3, 3), 6);
-  assert.equal(utils.permutation(10, 3), 720);
+QUnit.test('Count combinations', assert => {
+  assert.equal(utils.ncr(3, 1), 3);
+  assert.equal(utils.ncr(3, 3), 1);
+  assert.equal(utils.ncr(10, 3), 120);
+});
+
+QUnit.test('Generate combinations', assert => {
+  assert.deepEqual(utils.combinations([1, 2, 3], 2), [
+    [1, 2],
+    [1, 3],
+    [2, 3]
+  ]);
+});
+
+QUnit.test('Generate a cartesian product of arrays', assert => {
+  assert.deepEqual(utils.cartesian([1, 2], [3, 4]), [
+    [1, 3],
+    [1, 4],
+    [2, 3],
+    [2, 4]
+  ]);
+});
+
+QUnit.test('Generate an array', assert => {
+  assert.deepEqual(utils.times(i => i, 3), [0, 1, 2]);
+});
+
+QUnit.test('Create an array of integers', assert => {
+  assert.deepEqual(utils.range(3), [0, 1, 2]);
+});
+
+QUnit.test('Zip arrays together', assert => {
+  assert.deepEqual(utils.zip(['a', 'b', 'c'], [1, 2, 3]), [
+    ['a', 1],
+    ['b', 2],
+    ['c', 3]
+  ]);
+});
+
+QUnit.test('Array value at wrapped index', assert => {
+  const a = [1, 2, 3];
+  assert.equal(utils.at(a, 0), 1);
+  assert.equal(utils.at(a, 1), 2);
+  assert.equal(utils.at(a, 2), 3);
+  assert.equal(utils.at(a, -1), 3);
+  assert.equal(utils.at(a, -2), 2);
+  assert.equal(utils.at(a, -3), 1);
+  assert.equal(utils.at(a, -4), 3);
+  assert.equal(utils.at(a, 3), 1);
+  assert.equal(utils.at(a, 4), 2);
+});
+
+QUnit.test('Get the last element of an array', assert => {
+  assert.equal(utils.peek([1, 2, 3]), 3);
+});
+
+QUnit.test('Chop an array into chunks', assert => {
+  const a = utils.range(12);
+  assert.deepEqual(utils.chunk(a, 3), [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [9, 10, 11]
+  ]);
+  assert.deepEqual(utils.chunk(a, 4), [
+    [0, 1, 2, 3],
+    [4, 5, 6, 7],
+    [8, 9, 10, 11]
+  ]);
+  assert.deepEqual(utils.chunk(a, 5), [
+    [0, 1, 2, 3, 4],
+    [5, 6, 7, 8, 9],
+    [10, 11]
+  ]);
+});
+
+QUnit.test('Shuffle an array', assert => {
+  const a = utils.shuffle(utils.range(100));
+  assert.notEqual(a[0], 0);
+});
+
+QUnit.test('Flatten an object', assert => {
+  const o = {
+    a: {
+      b: {
+        c: 1
+      }
+    }
+  };
+  assert.deepEqual(utils.flat(o), {
+    'a.b.c': 1
+  });
+});
+
+QUnit.test('Unflatten an object', assert => {
+  const o = {
+    'a.b.c': 1
+  };
+  assert.deepEqual(utils.unflat(o), {
+    a: {
+      b: {
+        c: 1
+      }
+    }
+  });
+});
+
+QUnit.test('Split an array based on a predicate', assert => {
+  const a = [1, 2, 3, 4, 5];
+  assert.deepEqual(utils.split(a, x => x === 3), [
+    [1, 2],
+    [3, 4, 5]
+  ]);
+});
+
+QUnit.test('Pluck keys from an object', assert => {
+  const o = {
+    a: 1,
+    b: 2,
+    c: 3
+  };
+  assert.deepEqual(utils.pluck(o, 'a', 'c'), {
+    a: 1,
+    c: 3
+  });
+});
+
+QUnit.test('Exclude keys from an object', assert => {
+  const o = {
+    a: 1,
+    b: 2,
+    c: 3
+  };
+  assert.deepEqual(utils.exclude(o, 'a', 'c'), {
+    b: 2
+  });
 });
