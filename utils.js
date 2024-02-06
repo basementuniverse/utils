@@ -439,7 +439,7 @@ const split = (array, predicate) => {
 /**
  * Pluck keys from an object
  * @param {object} o
- * @param  {...string} keys The keys to pluck from the object
+ * @param {...string} keys The keys to pluck from the object
  * @return {object} An object containing the plucked keys
  */
 const pluck = (o, ...keys) => {
@@ -452,13 +452,32 @@ const pluck = (o, ...keys) => {
 /**
  * Exclude keys from an object
  * @param {object} o
- * @param  {...string} keys The keys to exclude from the object
+ * @param {...string} keys The keys to exclude from the object
  * @return {object} An object containing all keys except excluded keys
  */
 const exclude = (o, ...keys) => {
   return Object.fromEntries(
     Object.entries(o).filter(([key]) => !keys.includes(key))
   );
+};
+
+/**
+ * Deep-merge objects
+ * @param {object} a
+ * @param {object} b
+ * @return {object}
+ */
+const merge = (a, b) => {
+  const result = { ...a };
+  for (const [key, value] of Object.entries(b)) {
+    if (value instanceof Object && key in a) {
+      result[key] = merge(a[key], value);
+    } else {
+      result[key] = value;
+    }
+  }
+
+  return result;
 };
 
 if (typeof module !== 'undefined') {
@@ -498,5 +517,6 @@ if (typeof module !== 'undefined') {
     split,
     pluck,
     exclude,
+    merge,
   };
 }

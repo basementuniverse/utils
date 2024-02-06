@@ -258,3 +258,43 @@ QUnit.test('Exclude keys from an object', assert => {
     b: 2
   });
 });
+
+QUnit.test('Deep-merge objects', assert => {
+  const a = {
+    a: {
+      b: 1
+    },
+    c: {
+      d: {
+        e: 2,
+      },
+    },
+    f: 3,
+  };
+  const b = {
+    a: {
+      b: 4,
+      b2: 5,
+    },
+    c: {
+      d: {
+        e2: 6,
+      },
+    },
+    f: 7,
+  };
+
+  assert.deepEqual(utils.merge(a, b), {
+    a: {
+      b: 4,
+      b2: 5,
+    },
+    c: {
+      d: {
+        e: 2,
+        e2: 6,
+      },
+    },
+    f: 7,
+  });
+});
