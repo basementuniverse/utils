@@ -461,64 +461,6 @@ const exclude = (o, ...keys) => {
   );
 };
 
-/**
- * Deep-merge objects
- * @param {object} a
- * @param {object} b
- * @return {object}
- */
-const merge = (a, b) => {
-  const innerMerge = (a, b, d) => {
-    if (d > 100) {
-      throw new Error('Merge depth limit exceeded');
-    }
-
-    // a and b are both arrays => concatenate a and b
-    if (Array.isArray(a) && Array.isArray(b)) {
-      return a.concat(b);
-    }
-
-    // a is an array and b is anything else => push b onto a
-    if (Array.isArray(a)) {
-      return a.concat([b]);
-    }
-
-    if (!(a instanceof Object)) {
-      // a is a value and b is an array => unshift a into b
-      if (Array.isArray(b)) {
-        return [a].concat(b);
-      }
-
-      // a is a value and b is anything else => create tuple
-      return [a, b];
-    }
-
-    // a is an object and b is an array => unshift a into b
-    if (Array.isArray(b)) {
-      return [a].concat(b);
-    }
-
-    // a is an object and b is a value => create tuple
-    if (!(b instanceof Object)) {
-      return [a, b];
-    }
-
-    // a and b are both objects => deep merge
-    const result = { ...a };
-    for (const [key, value] of Object.entries(b)) {
-      if (value instanceof Object && key in a) {
-        result[key] = innerMerge(a[key], value, d + 1);
-      } else {
-        result[key] = value;
-      }
-    }
-
-    return result;
-  };
-
-  return innerMerge(a, b, 0);
-};
-
 if (typeof module !== 'undefined') {
   module.exports = {
     floatEquals,
@@ -556,6 +498,5 @@ if (typeof module !== 'undefined') {
     split,
     pluck,
     exclude,
-    merge,
   };
 }

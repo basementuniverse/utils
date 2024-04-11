@@ -132,9 +132,6 @@ import * as utils from '@basementuniverse/utils';
 <dt><a href="#exclude">exclude(o, ...keys)</a> ⇒ <code>object</code></dt>
 <dd><p>Exclude keys from an object</p>
 </dd>
-<dt><a href="#merge">merge(a, b)</a> ⇒ <code>object</code></dt>
-<dd><p>Deep-merge objects</p>
-</dd>
 </dl>
 
 ## Typedefs
@@ -630,18 +627,6 @@ Exclude keys from an object
 | --- | --- | --- |
 | o | <code>object</code> |  |
 | ...keys | <code>string</code> | The keys to exclude from the object |
-
-<a name="merge"></a>
-
-## merge(a, b) ⇒ <code>object</code>
-Deep-merge objects
-
-**Kind**: global function  
-
-| Param | Type |
-| --- | --- |
-| a | <code>object</code> | 
-| b | <code>object</code> | 
 
 <a name="InterpolationFunction"></a>
 

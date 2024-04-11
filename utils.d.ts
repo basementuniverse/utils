@@ -356,17 +356,6 @@ declare function exclude<T extends object, K extends [...(keyof T)[]]>(
   [K2 in Exclude<keyof T, K[number]>]: T[K2];
 };
 
-/**
- * Deep-merge objects
- * @param {object} a
- * @param {object} b
- * @return {object}
- */
-declare function merge<T extends object, U extends object>(
-  a: T,
-  b: U
-): T & U;
-
 export {
   floatEquals,
   clamp,
@@ -402,5 +391,4 @@ export {
   split,
   pluck,
   exclude,
-  merge,
 };
