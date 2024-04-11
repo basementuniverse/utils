@@ -507,7 +507,7 @@ const merge = (a, b) => {
     const result = { ...a };
     for (const [key, value] of Object.entries(b)) {
       if (value instanceof Object && key in a) {
-        result[key] = merge(a[key], value, d + 1);
+        result[key] = innerMerge(a[key], value, d + 1);
       } else {
         result[key] = value;
       }
