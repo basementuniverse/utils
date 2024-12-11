@@ -2,6 +2,19 @@ const utils = require('../utils.js');
 
 QUnit.module('Utils tests');
 
+QUnit.test('Memoize', assert => {
+  let calledCount = 0;
+  const f = utils.memoize(x => {
+    calledCount++;
+    return 2 * x;
+  });
+  assert.equal(f(1), 2);
+  assert.equal(f(1), 2);
+  assert.equal(f(2), 4);
+  assert.equal(f(2), 4);
+  assert.equal(calledCount, 2);
+});
+
 QUnit.test('Approximate value equality', assert => {
   assert.equal(utils.floatEquals(1 / 3, 0.3333333333333333), true);
 });
@@ -125,6 +138,17 @@ QUnit.test('Count combinations', assert => {
   assert.equal(utils.ncr(3, 1), 3);
   assert.equal(utils.ncr(3, 3), 1);
   assert.equal(utils.ncr(10, 3), 120);
+});
+
+QUnit.test('Generate permutations', assert => {
+  assert.deepEqual(utils.permutations([1, 2, 3], 2), [
+    [1, 2],
+    [1, 3],
+    [2, 1],
+    [2, 3],
+    [3, 1],
+    [3, 2]
+  ]);
 });
 
 QUnit.test('Generate combinations', assert => {

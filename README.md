@@ -27,6 +27,9 @@ import * as utils from '@basementuniverse/utils';
 ## Functions
 
 <dl>
+<dt><a href="#memoize">memoize(f)</a> ⇒ <code>function</code></dt>
+<dd><p>Memoize a function</p>
+</dd>
 <dt><a href="#floatEquals">floatEquals(a, b, [p])</a> ⇒ <code>boolean</code></dt>
 <dd><p>Check if two numbers are approximately equal</p>
 </dd>
@@ -90,6 +93,9 @@ import * as utils from '@basementuniverse/utils';
 <dt><a href="#ncr">ncr(n, r)</a> ⇒ <code>number</code></dt>
 <dd><p>Get the number of combinations of r elements from a set of n elements</p>
 </dd>
+<dt><a href="#permutations">permutations(a, r)</a> ⇒ <code>Array.&lt;Array.&lt;*&gt;&gt;</code></dt>
+<dd><p>Generate all permutations of r elements from an array</p>
+</dd>
 <dt><a href="#combinations">combinations(a, r)</a> ⇒ <code>Array.&lt;Array.&lt;*&gt;&gt;</code></dt>
 <dd><p>Generate all combinations of r elements from an array</p>
 </dd>
@@ -147,6 +153,18 @@ import * as utils from '@basementuniverse/utils';
 <dd><p>A split predicate</p>
 </dd>
 </dl>
+
+<a name="memoize"></a>
+
+## memoize(f) ⇒ <code>function</code>
+Memoize a function
+
+**Kind**: global function  
+**Returns**: <code>function</code> - A memoized version of the function  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| f | <code>function</code> | The function to memoize |
 
 <a name="floatEquals"></a>
 
@@ -429,6 +447,35 @@ Get the number of combinations of r elements from a set of n elements
 | n | <code>number</code> | 
 | r | <code>number</code> | 
 
+<a name="permutations"></a>
+
+## permutations(a, r) ⇒ <code>Array.&lt;Array.&lt;\*&gt;&gt;</code>
+Generate all permutations of r elements from an array
+
+**Kind**: global function  
+**Returns**: <code>Array.&lt;Array.&lt;\*&gt;&gt;</code> - An array of combination arrays  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| a | <code>Array.&lt;\*&gt;</code> |  |
+| r | <code>number</code> | The number of elements to choose in each combination |
+
+**Example**  
+```js
+permutations([1, 2, 3], 2);
+```
+
+Output:
+```json
+[
+  [1, 2],
+  [1, 3],
+  [2, 1],
+  [2, 3],
+  [3, 1],
+  [3, 2]
+]
+```
 <a name="combinations"></a>
 
 ## combinations(a, r) ⇒ <code>Array.&lt;Array.&lt;\*&gt;&gt;</code>

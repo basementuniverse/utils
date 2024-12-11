@@ -4,6 +4,18 @@
  */
 
 /**
+ * Memoize a function
+ * @param {Function} f The function to memoize
+ * @returns {Function} A memoized version of the function
+ */
+const memoize = f => {
+  var cache = {};
+  return function(...args) {
+    return cache[args] ?? (cache[args] = f.apply(this, args));
+  };
+};
+
+/**
  * Check if two numbers are approximately equal
  * @param {number} a Number a
  * @param {number} b Number b
@@ -214,6 +226,43 @@ const npr = (n, r) => factorial(n) / factorial(n - r);
  * @return {number} nCr
  */
 const ncr = (n, r) => factorial(n) / (factorial(r) * factorial(n - r));
+
+/**
+ * Generate all permutations of r elements from an array
+ *
+ * @example
+ * ```js
+ * permutations([1, 2, 3], 2);
+ * ```
+ *
+ * Output:
+ * ```json
+ * [
+ *   [1, 2],
+ *   [1, 3],
+ *   [2, 1],
+ *   [2, 3],
+ *   [3, 1],
+ *   [3, 2]
+ * ]
+ * ```
+ * @param {Array<*>} a
+ * @param {number} r The number of elements to choose in each combination
+ * @return {Array<Array<*>>} An array of combination arrays
+ */
+const permutations = (a, r) => {
+  if (r === 1) {
+    return a.map(item => [item]);
+  }
+
+  return a.reduce(
+    (acc, item, i) => [
+      ...acc,
+      ...permutations(a.slice(0, i).concat(a.slice(i + 1)), r - 1).map(c => [item, ...c]),
+    ],
+    []
+  );
+}
 
 /**
  * Generate all combinations of r elements from an array
@@ -463,6 +512,7 @@ const exclude = (o, ...keys) => {
 
 if (typeof module !== 'undefined') {
   module.exports = {
+    memoize,
     floatEquals,
     clamp,
     frac,
@@ -484,6 +534,7 @@ if (typeof module !== 'undefined') {
     factorial,
     npr,
     ncr,
+    permutations,
     combinations,
     cartesian,
     times,
