@@ -10,8 +10,7 @@
   "scripts": {
     "test": "qunit",
     "build": "gulp",
-    "build-docs": "node node_modules/jsdoc-to-markdown/bin/cli.js utils.js --template readme-template.md > README.md",
-    "publish": "npm publish --access public"
+    "build-docs": "node node_modules/jsdoc-to-markdown/bin/cli.js utils.js --template readme-template.md > README.md"
   },
   "repository": {
     "type": "git",
