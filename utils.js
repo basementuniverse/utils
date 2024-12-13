@@ -247,8 +247,8 @@ const ncr = (n, r) => factorial(n) / (factorial(r) * factorial(n - r));
  * ]
  * ```
  * @param {Array<*>} a
- * @param {number} r The number of elements to choose in each combination
- * @return {Array<Array<*>>} An array of combination arrays
+ * @param {number} r The number of elements to choose in each permutation
+ * @return {Array<Array<*>>} An array of permutation arrays
  */
 const permutations = (a, r) => {
   if (r === 1) {

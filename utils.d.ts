@@ -1,6 +1,13 @@
 /// <reference types="typescript" />
 
 /**
+ * Memoize a function
+ * @param {Function} f The function to memoize
+ * @returns {Function} A memoized version of the function
+ */
+declare function memoize(f: Function): Function;
+
+/**
  * Check if two numbers are approximately equal
  * @param {number} a Number a
  * @param {number} b Number b
@@ -188,6 +195,31 @@ declare function npr(n: number, r: number): number;
 declare function ncr(n: number, r: number): number;
 
 /**
+ * Generate all permutations of r elements from an array
+ *
+ * @example
+ * ```js
+ * permutations([1, 2, 3], 2);
+ * ```
+ *
+ * Output:
+ * ```json
+ * [
+ *   [1, 2],
+ *   [1, 3],
+ *   [2, 1],
+ *   [2, 3],
+ *   [3, 1],
+ *   [3, 2]
+ * ]
+ * ```
+ * @param {T[]} a
+ * @param {number} r The number of elements to choose in each permutation
+ * @return {T[][]} An array of permutation arrays
+ */
+declare function permutations<T>(a: T[], r: number): T[][];
+
+/**
  * Generate all combinations of r elements from an array
  *
  * @example
@@ -283,7 +315,24 @@ declare function at(a: Array<any>, i: number): any;
  * @param {T[]} a
  * @return {T} The last element from the array
  */
-declare function at<T = any>(a: T[]): T | undefined;
+declare function peek<T = any>(a: T[]): T | undefined;
+
+/**
+ * Return the index for a given position in an unrolled 2d array
+ * @param {number} x The x position
+ * @param {number} y The y position
+ * @param {number} w The width of the 2d array
+ * @returns {number} The index in the unrolled array
+ */
+declare function ind(x: number, y: number, w: number): number;
+
+/**
+ * Return the position for a given index in an unrolled 2d array
+ * @param {number} i The index
+ * @param {number} w The width of the 2d array
+ * @returns {Array<number>} The position as a 2-tuple
+ */
+declare function pos(i: number, w: number): [number, number];
 
 /**
  * Chop an array into chunks of size n
@@ -357,6 +406,7 @@ declare function exclude<T extends object, K extends [...(keyof T)[]]>(
 };
 
 export {
+  memoize,
   floatEquals,
   clamp,
   frac,
@@ -378,12 +428,16 @@ export {
   factorial,
   npr,
   ncr,
+  permutations,
   combinations,
   cartesian,
   times,
   range,
   zip,
   at,
+  peek,
+  ind,
+  pos,
   chunk,
   shuffle,
   flat,

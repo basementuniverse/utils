@@ -459,12 +459,12 @@ Get the number of combinations of r elements from a set of n elements
 Generate all permutations of r elements from an array
 
 **Kind**: global function  
-**Returns**: <code>Array.&lt;Array.&lt;\*&gt;&gt;</code> - An array of combination arrays  
+**Returns**: <code>Array.&lt;Array.&lt;\*&gt;&gt;</code> - An array of permutation arrays  
 
 | Param | Type | Description |
 | --- | --- | --- |
 | a | <code>Array.&lt;\*&gt;</code> |  |
-| r | <code>number</code> | The number of elements to choose in each combination |
+| r | <code>number</code> | The number of elements to choose in each permutation |
 
 **Example**  
 ```js
