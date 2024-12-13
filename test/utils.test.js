@@ -182,6 +182,43 @@ QUnit.test('Zip arrays together', assert => {
     ['b', 2],
     ['c', 3]
   ]);
+  assert.deepEqual(
+    utils.zip(
+      ['a', 'b', 'c'],
+      [1, 2, 3],
+      ['one', 'two', 'three'],
+      [true, false, null]
+    ),
+    [
+      ['a', 1, 'one', true],
+      ['b', 2, 'two', false],
+      ['c', 3, 'three', null],
+    ]
+  );
+  assert.deepEqual(
+    utils.zip(
+      ['a', 'b', 'c', 'd'],
+      [1, 2, 3],
+      ['one', 'two', 'three', 'four', 'five'],
+      [true, false, null]
+    ),
+    [
+      ['a', 1, 'one', true],
+      ['b', 2, 'two', false],
+      ['c', 3, 'three', null],
+      ['d', undefined, 'four', undefined],
+      [undefined, undefined, 'five', undefined],
+    ]
+  );
+  assert.deepEqual(
+    utils.zip(
+      ...utils.zip(['a', 'b', 'c'], [1, 2, 3])
+    ),
+    [
+      ['a', 'b', 'c'],
+      [1, 2, 3],
+    ]
+  );
 });
 
 QUnit.test('Array value at wrapped index', assert => {
@@ -199,6 +236,14 @@ QUnit.test('Array value at wrapped index', assert => {
 
 QUnit.test('Get the last element of an array', assert => {
   assert.equal(utils.peek([1, 2, 3]), 3);
+});
+
+QUnit.test('Convert a 2d position into an index in a flattened array', assert => {
+  assert.equal(utils.ind(2, 3, 10), 32);
+});
+
+QUnit.test('Convert an index in a flattened array into a 2d position', assert => {
+  assert.deepEqual(utils.pos(32, 10), [2, 3]);
 });
 
 QUnit.test('Chop an array into chunks', assert => {

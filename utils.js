@@ -347,16 +347,15 @@ const times = (f, n) => Array(n).fill(0).map((_, i) => f(i));
 const range = n => times(i => i, n);
 
 /**
- * Zip 2 arrays together, i.e. ([1, 2, 3], [a, b, c]) => [[1, a], [2, b], [3, c]]
- * @param {Array<*>} a
- * @param {Array<*>} b
+ * Zip multiple arrays together, i.e. ([1, 2, 3], [a, b, c]) => [[1, a], [2, b], [3, c]]
+ * @param {...Array<*>} a The arrays to zip
  * @return {Array<Array<*>>}
  */
-const zip = (a, b) => a.map((k, i) => [k, b[i]]);
+const zip = (...a) => times(i => a.map(a => a[i]), Math.max(...a.map(a => a.length)));
 
 /**
  * Return array[i] with positive and negative wrapping
- * @param {Array<*>} a
+ * @param {Array<*>} a The array to access
  * @param {number} i The positively/negatively wrapped array index
  * @return {*} An element from the array
  */
@@ -374,6 +373,23 @@ const peek = (a) => {
 
   return a[a.length - 1];
 };
+
+/**
+ * Return the index for a given position in an unrolled 2d array
+ * @param {number} x The x position
+ * @param {number} y The y position
+ * @param {number} w The width of the 2d array
+ * @returns {number} The index in the unrolled array
+ */
+const ind = (x, y, w) => x + y * w;
+
+/**
+ * Return the position for a given index in an unrolled 2d array
+ * @param {number} i The index
+ * @param {number} w The width of the 2d array
+ * @returns {Array<number>} The position as a 2-tuple
+ */
+const pos = (i, w) => [i % w, Math.floor(i / w)];
 
 /**
  * Chop an array into chunks of size n
@@ -542,6 +558,8 @@ if (typeof module !== 'undefined') {
     zip,
     at,
     peek,
+    ind,
+    pos,
     chunk,
     shuffle,
     flat,

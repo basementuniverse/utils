@@ -108,14 +108,20 @@ import * as utils from '@basementuniverse/utils';
 <dt><a href="#range">range(n)</a> ⇒ <code>Array.&lt;number&gt;</code></dt>
 <dd><p>Return an array containing numbers 0-&gt;(n - 1)</p>
 </dd>
-<dt><a href="#zip">zip(a, b)</a> ⇒ <code>Array.&lt;Array.&lt;*&gt;&gt;</code></dt>
-<dd><p>Zip 2 arrays together, i.e. ([1, 2, 3], [a, b, c]) =&gt; [[1, a], [2, b], [3, c]]</p>
+<dt><a href="#zip">zip(...a)</a> ⇒ <code>Array.&lt;Array.&lt;*&gt;&gt;</code></dt>
+<dd><p>Zip multiple arrays together, i.e. ([1, 2, 3], [a, b, c]) =&gt; [[1, a], [2, b], [3, c]]</p>
 </dd>
 <dt><a href="#at">at(a, i)</a> ⇒ <code>*</code></dt>
 <dd><p>Return array[i] with positive and negative wrapping</p>
 </dd>
 <dt><a href="#peek">peek(a)</a> ⇒ <code>*</code></dt>
 <dd><p>Return the last element of an array without removing it</p>
+</dd>
+<dt><a href="#ind">ind(x, y, w)</a> ⇒ <code>number</code></dt>
+<dd><p>Return the index for a given position in an unrolled 2d array</p>
+</dd>
+<dt><a href="#pos">pos(i, w)</a> ⇒ <code>Array.&lt;number&gt;</code></dt>
+<dd><p>Return the position for a given index in an unrolled 2d array</p>
 </dd>
 <dt><a href="#chunk">chunk(a, n)</a> ⇒ <code>Array.&lt;Array.&lt;*&gt;&gt;</code></dt>
 <dd><p>Chop an array into chunks of size n</p>
@@ -550,15 +556,14 @@ Return an array containing numbers 0->(n - 1)
 
 <a name="zip"></a>
 
-## zip(a, b) ⇒ <code>Array.&lt;Array.&lt;\*&gt;&gt;</code>
-Zip 2 arrays together, i.e. ([1, 2, 3], [a, b, c]) => [[1, a], [2, b], [3, c]]
+## zip(...a) ⇒ <code>Array.&lt;Array.&lt;\*&gt;&gt;</code>
+Zip multiple arrays together, i.e. ([1, 2, 3], [a, b, c]) => [[1, a], [2, b], [3, c]]
 
 **Kind**: global function  
 
-| Param | Type |
-| --- | --- |
-| a | <code>Array.&lt;\*&gt;</code> | 
-| b | <code>Array.&lt;\*&gt;</code> | 
+| Param | Type | Description |
+| --- | --- | --- |
+| ...a | <code>Array.&lt;\*&gt;</code> | The arrays to zip |
 
 <a name="at"></a>
 
@@ -570,7 +575,7 @@ Return array[i] with positive and negative wrapping
 
 | Param | Type | Description |
 | --- | --- | --- |
-| a | <code>Array.&lt;\*&gt;</code> |  |
+| a | <code>Array.&lt;\*&gt;</code> | The array to access |
 | i | <code>number</code> | The positively/negatively wrapped array index |
 
 <a name="peek"></a>
@@ -584,6 +589,33 @@ Return the last element of an array without removing it
 | Param | Type |
 | --- | --- |
 | a | <code>Array.&lt;\*&gt;</code> | 
+
+<a name="ind"></a>
+
+## ind(x, y, w) ⇒ <code>number</code>
+Return the index for a given position in an unrolled 2d array
+
+**Kind**: global function  
+**Returns**: <code>number</code> - The index in the unrolled array  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| x | <code>number</code> | The x position |
+| y | <code>number</code> | The y position |
+| w | <code>number</code> | The width of the 2d array |
+
+<a name="pos"></a>
+
+## pos(i, w) ⇒ <code>Array.&lt;number&gt;</code>
+Return the position for a given index in an unrolled 2d array
+
+**Kind**: global function  
+**Returns**: <code>Array.&lt;number&gt;</code> - The position as a 2-tuple  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| i | <code>number</code> | The index |
+| w | <code>number</code> | The width of the 2d array |
 
 <a name="chunk"></a>
 
