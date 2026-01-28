@@ -405,6 +405,41 @@ declare function exclude<T extends object, K extends [...(keyof T)[]]>(
   [K2 in Exclude<keyof T, K[number]>]: T[K2];
 };
 
+/**
+ * A key transform predicate
+ * @callback KeyTransformFunction
+ * @param {object} o The object being transformed
+ * @param {string} path The current path in dot notation
+ * @param {string} key The current key
+ * @param {any} value The current value
+ * @return {string|null} The transformed key, or null to omit the key
+ */
+type KeyTransformFunction = (o: object, path: string, key: string, value: any) => string | null;
+
+/**
+ * A value transform predicate
+ * @callback ValueTransformFunction
+ * @param {object} o The object being transformed
+ * @param {string} path The current path in dot notation
+ * @param {string} key The current key
+ * @param {any} value The current value
+ * @return {any} The transformed value
+ */
+type ValueTransformFunction = (o: object, path: string, key: string, value: any) => any;
+
+/**
+ * Recursively transform the keys and values of an object
+ * @param {object} o The object to transform
+ * @param {KeyTransformFunction} [kf=undefined] Optional key transform
+ * @param {ValueTransformFunction} [vf=undefined] Optional value transform
+ * @return {object} The transformed object
+ */
+declare function transform(
+  o: object,
+  kf?: KeyTransformFunction,
+  vf?: ValueTransformFunction
+): object;
+
 export {
   memoize,
   floatEquals,
@@ -445,4 +480,5 @@ export {
   split,
   pluck,
   exclude,
+  transform,
 };

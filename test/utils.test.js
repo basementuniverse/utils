@@ -327,3 +327,60 @@ QUnit.test('Exclude keys from an object', assert => {
     b: 2
   });
 });
+
+QUnit.test('Transform object - basic transform', assert => {
+  const o = {
+    a: 1,
+    b: 2,
+    c: 3
+  };
+  const transformed = utils.transform(
+    o,
+    (_o, _path, key, _value) => key.toUpperCase(),
+    (_o, _path, _key, value) => value * 10
+  );
+  assert.deepEqual(transformed, {
+    A: 10,
+    B: 20,
+    C: 30
+  });
+});
+
+QUnit.test('Transform object - skip key', assert => {
+  const o = {
+    a: 1,
+    b: 2,
+    c: 3
+  };
+  const transformed = utils.transform(
+    o,
+    (_o, _path, key, _value) => key === 'b' ? null : key,
+    (_o, _path, _key, value) => value * 10
+  );
+  assert.deepEqual(transformed, {
+    a: 10,
+    c: 30
+  });
+});
+
+QUnit.test('Transform object - recursive transform', assert => {
+  const o = {
+    a: 1,
+    b: {
+      c: 2,
+      d: 3
+    }
+  };
+  const transformed = utils.transform(
+    o,
+    (_o, _path, key, _value) => key.toUpperCase(),
+    (_o, _path, _key, value) => value * 10
+  );
+  assert.deepEqual(transformed, {
+    A: 10,
+    B: {
+      C: 20,
+      D: 30
+    }
+  });
+});

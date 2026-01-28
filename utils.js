@@ -526,6 +526,66 @@ const exclude = (o, ...keys) => {
   );
 };
 
+/**
+ * A key transform predicate
+ * @callback KeyTransformFunction
+ * @param {object} o The object being transformed
+ * @param {string} path The current path in dot notation
+ * @param {string} key The current key
+ * @param {any} value The current value
+ * @return {string|null} The transformed key, or null to omit the key
+ */
+
+/**
+ * A value transform predicate
+ * @callback ValueTransformFunction
+ * @param {object} o The object being transformed
+ * @param {string} path The current path in dot notation
+ * @param {string} key The current key
+ * @param {any} value The current value
+ * @return {any} The transformed value
+ */
+
+/**
+ * Recursively transform the keys and values of an object
+ * @param {object} o The object to transform
+ * @param {KeyTransformFunction} [kf=undefined] Optional key transform
+ * @param {ValueTransformFunction} [vf=undefined] Optional value transform
+ * @return {object} The transformed object
+ */
+const transform = (o, kf = undefined, vf = undefined) => {
+  const innerTransform = (obj, currentPath) => {
+    return Object.entries(obj).reduce((acc, [key, value]) => {
+      let newKey = key;
+      let newValue = value;
+      const path = currentPath ? `${currentPath}.${key}` : key;
+
+      if (
+        typeof newValue === 'object' &&
+        newValue !== null &&
+        !(newValue instanceof Date)
+      ) {
+        newValue = innerTransform(newValue, path);
+      } else if (vf) {
+        newValue = vf(obj, path, key, value);
+      }
+      if (kf) {
+        newKey = kf(obj, path, key, newValue);
+        if (newKey === null) {
+          return acc;
+        }
+      }
+
+      return {
+        ...acc,
+        [newKey]: newValue,
+      };
+    }, {});
+  };
+
+  return innerTransform(o, '');
+};
+
 if (typeof module !== 'undefined') {
   module.exports = {
     memoize,
@@ -567,5 +627,6 @@ if (typeof module !== 'undefined') {
     split,
     pluck,
     exclude,
+    transform,
   };
 }

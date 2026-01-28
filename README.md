@@ -144,6 +144,9 @@ import * as utils from '@basementuniverse/utils';
 <dt><a href="#exclude">exclude(o, ...keys)</a> ⇒ <code>object</code></dt>
 <dd><p>Exclude keys from an object</p>
 </dd>
+<dt><a href="#transform">transform(o, [kf], [vf])</a> ⇒ <code>object</code></dt>
+<dd><p>Recursively transform the keys and values of an object</p>
+</dd>
 </dl>
 
 ## Typedefs
@@ -157,6 +160,12 @@ import * as utils from '@basementuniverse/utils';
 </dd>
 <dt><a href="#SplitPredicate">SplitPredicate</a> ⇒ <code>boolean</code></dt>
 <dd><p>A split predicate</p>
+</dd>
+<dt><a href="#KeyTransformFunction">KeyTransformFunction</a> ⇒ <code>string</code> | <code>null</code></dt>
+<dd><p>A key transform predicate</p>
+</dd>
+<dt><a href="#ValueTransformFunction">ValueTransformFunction</a> ⇒ <code>any</code></dt>
+<dd><p>A value transform predicate</p>
 </dd>
 </dl>
 
@@ -707,6 +716,20 @@ Exclude keys from an object
 | o | <code>object</code> |  |
 | ...keys | <code>string</code> | The keys to exclude from the object |
 
+<a name="transform"></a>
+
+## transform(o, [kf], [vf]) ⇒ <code>object</code>
+Recursively transform the keys and values of an object
+
+**Kind**: global function  
+**Returns**: <code>object</code> - The transformed object  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| o | <code>object</code> | The object to transform |
+| [kf] | [<code>KeyTransformFunction</code>](#KeyTransformFunction) | Optional key transform |
+| [vf] | [<code>ValueTransformFunction</code>](#ValueTransformFunction) | Optional value transform |
+
 <a name="InterpolationFunction"></a>
 
 ## InterpolationFunction ⇒ <code>number</code>
@@ -743,5 +766,35 @@ A split predicate
 
 | Param | Type | Description |
 | --- | --- | --- |
+| value | <code>any</code> | The current value |
+
+<a name="KeyTransformFunction"></a>
+
+## KeyTransformFunction ⇒ <code>string</code> \| <code>null</code>
+A key transform predicate
+
+**Kind**: global typedef  
+**Returns**: <code>string</code> \| <code>null</code> - The transformed key, or null to omit the key  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| o | <code>object</code> | The object being transformed |
+| path | <code>string</code> | The current path in dot notation |
+| key | <code>string</code> | The current key |
+| value | <code>any</code> | The current value |
+
+<a name="ValueTransformFunction"></a>
+
+## ValueTransformFunction ⇒ <code>any</code>
+A value transform predicate
+
+**Kind**: global typedef  
+**Returns**: <code>any</code> - The transformed value  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| o | <code>object</code> | The object being transformed |
+| path | <code>string</code> | The current path in dot notation |
+| key | <code>string</code> | The current key |
 | value | <code>any</code> | The current value |
 

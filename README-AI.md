@@ -60,6 +60,7 @@ const utils = require('@basementuniverse/utils');
 - `split(array, pred)` – Split array by predicate.
 - `pluck(o, ...keys)` – Pick keys from object.
 - `exclude(o, ...keys)` – Exclude keys from object.
+- `transform(o, [keyFn], [valFn])` – Recursively transform object keys/values.
 
 ### Combinatorics
 
