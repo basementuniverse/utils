@@ -384,3 +384,29 @@ QUnit.test('Transform object - recursive transform', assert => {
     }
   });
 });
+
+QUnit.test('Transform object - arrays preserved', assert => {
+  const o = {
+    a: 1,
+    b: [2, 3, 4],
+    c: {
+      d: 5,
+      e: [6, 7, 8]
+    }
+  };
+  const transformed = utils.transform(
+    o,
+    undefined,
+    (_o, _path, _key, value) => typeof value === 'number' ? value * 10 : value
+  );
+  assert.deepEqual(transformed, {
+    a: 10,
+    b: [2, 3, 4],
+    c: {
+      d: 50,
+      e: [6, 7, 8]
+    }
+  });
+  assert.ok(Array.isArray(transformed.b), 'b should remain an array');
+  assert.ok(Array.isArray(transformed.c.e), 'c.e should remain an array');
+});

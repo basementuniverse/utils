@@ -563,7 +563,8 @@ const transform = (o, kf = undefined, vf = undefined) => {
       if (
         typeof newValue === 'object' &&
         newValue !== null &&
-        !(newValue instanceof Date)
+        !(newValue instanceof Date) &&
+        !Array.isArray(newValue)
       ) {
         newValue = innerTransform(newValue, path);
       } else if (vf) {
